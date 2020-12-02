@@ -25,6 +25,8 @@
       <main>
         <div class="film" v-for="film in arrayFilm">
 
+          <img :src='"https://image.tmdb.org/t/p/w342/" + film.poster_path' @error="replacePoster">
+
           <div v-if="film.type === 'movie'">
             <div>Titolo: {{film.title}}</div>
             <div>Titolo Originale: {{film.original_title}}</div>
