@@ -16,6 +16,14 @@
         <div id="logo">
           BOOLFLIX
         </div>
+        <div id="searched" v-if="query != ''">
+          Risultati per: {{query}}
+        </div>
+        <div id="page-selector" v-if="totalPages > 1">
+          <i class="fas fa-caret-left" @click="prevPage" v-if="page > 1"></i>
+          pagina {{page}} di {{totalPages}}
+          <i class="fas fa-caret-right" @click="nextPage" v-if="page < totalPages"></i>
+        </div>
         <div id="searchbar">
           <input v-model="searchKey" type="text" @keypress.enter="searchFilm" placeholder="Search...">
           <button type="button" @click="searchFilm">SEARCH</button>
@@ -42,8 +50,9 @@
 
           <div>
             Voto:
-            <span v-for="star in film.stars"><i class="fas fa-star"></i></span>
-            <span v-for="nostar in film.nostars"><i class="far fa-star"></i></span>
+            <span v-for="(vote,i) in maxVote">
+              <i class="fa-star" :class="i <= film.vote_average ? 'fas' : 'far'"></i>
+            </span>
           </div>
 
         </div>
