@@ -24,18 +24,26 @@
 
       <main>
         <div class="film" v-for="film in arrayFilm">
-          <div>
-            Titolo: {{film.title}}
+
+          <div v-if="film.type === 'movie'">
+            <div>Titolo: {{film.title}}</div>
+            <div>Titolo Originale: {{film.original_title}}</div>
           </div>
-          <div>
-            Titolo Originale: {{film.original_title}}
+          <div v-if="film.type === 'tv'">
+            <div>Titolo: {{film.name}}</div>
+            <div>Titolo Originale: {{film.name}}</div>
           </div>
-          <div>
-            Lingua: {{film.original_language}}
+
+          <div class="film-language">
+            Lingua: <img :src='"img/" + film.original_language + ".png"' :alt="film.original_language">
           </div>
+
           <div>
-            Voto: {{film.vote_average}}
+            Voto:
+            <span v-for="star in film.stars"><i class="fas fa-star"></i></span>
+            <span v-for="nostar in film.nostars"><i class="far fa-star"></i></span>
           </div>
+
         </div>
       </main>
 
