@@ -1,0 +1,39 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+#app {
+  height: 100vh;
+  background-color: grey;
+  font-family: 'Lato', sans-serif;
+}
+
+header {
+  background-color: black;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 100px;
+}
+
+#logo {
+  color: red;
+}
+
+main {
+  padding: 50px 100px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+main .film {
+  width: calc((100% - 200px) / 5);
+  background-color: black;
+  border: 1px solid red;
+  color: white;
+  margin-bottom: 50px;
+  padding: 10px;
+}
