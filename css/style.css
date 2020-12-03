@@ -9,6 +9,7 @@
 #app {
   height: 100vh;
   font-family: 'Lato', sans-serif;
+  position: relative;
 }
 
 
@@ -139,7 +140,7 @@ main .film {
   align-items: center;
 }
 
-.film-language img {
+.film-language>img {
   width: 20px;
   height: 11px;
   margin-left: 5px;
@@ -156,7 +157,7 @@ main .film {
   margin-top: 5px;
 }
 
-.film-details .det-title {
+.det-title {
   font-weight: bold;
   color: white;
 }
@@ -179,4 +180,78 @@ main .film {
 
 .film:hover>.film-details {
   display: block;
+}
+
+
+
+/* FILM SELECTED */
+
+#film-sel {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  background-color: rgba(0,0,0,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+#card {
+  width: 700px;
+  border: 1px solid white;
+  background-color: black;
+  padding: 20px;
+  color: grey;
+  position: relative;
+}
+
+#card-top {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+#card-top>div>div , #card .movtv{
+  margin-top: 20px;
+}
+
+#card-top>img {
+  width: 200px;
+  height: 300px;
+  border-radius: 10px;
+  margin-right: 20px;
+}
+
+#card .det-title {
+  margin-right: 10px;
+  color: lightgrey;
+}
+
+#card .card-list {
+  margin-right: 10px;
+}
+
+#card .card-list:not(:last-child)::after {
+  content: ",";
+}
+
+#card-close {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border: 1px solid white;
+  width: 120px;
+  height: 30px;
+  position: absolute;
+  background-color: black;
+  top: -30px;
+  right: -0.5px;
+  transition: 0.2s;
+}
+
+#card-close:hover {
+  cursor: pointer;
+  background-color: #202020;
+  color: white;
 }

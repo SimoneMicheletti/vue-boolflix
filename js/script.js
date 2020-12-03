@@ -7,7 +7,9 @@ var app = new Vue ({
     totalPages: 1,
     maxVote: 5,
     query: "",
-    searchKey: ""
+    searchKey: "",
+    idFilmSel: "0",
+    filmSel: {}
   },
 
   mounted: function() {
@@ -17,7 +19,7 @@ var app = new Vue ({
   methods: {
 
     // Funzione aggiornare array film mostrati
-    searchFilm() {
+    updateFilm() {
       this.arrayFilm = [];
       // Verifico se è una nuovo ricerca o solo un cambio pagina
       if (this.searchKey != "") {
@@ -26,13 +28,20 @@ var app = new Vue ({
         this.totalPages = 1;
       }
       this.searchKey = "";
-      this.updateArray("movie")
-      this.updateArray("tv")
+      this.searchAPI("movie")
+      this.searchAPI("tv")
     },
 
-    // Chiamate API
-    updateArray(movieTv) {
-      axios.get("https://api.themoviedb.org/3/search/" + movieTv + "?api_key=3c7831140b3840fb6c05d908251a82a8&query=" + this.query + "&page=" + this.page)
+    // search API
+    searchAPI(movieTv) {
+      axios.get("https://api.themoviedb.org/3/search/" + movieTv, {
+        params: {
+          api_key: "3c7831140b3840fb6c05d908251a82a8",
+          language: "it-IT",
+          query: this.query,
+          page: this.page
+        }
+      })
       .then(resp => {
         this.totalPages < resp.data.total_pages ? this.totalPages = resp.data.total_pages : this.total_pages
         resp.data.results.forEach(item => {
@@ -51,13 +60,13 @@ var app = new Vue ({
     // Funzione Next page
     nextPage() {
       this.page++
-      this.searchFilm()
+      this.updateFilm()
     },
 
     // Funzione Prev page
     prevPage() {
       this.page--
-      this.searchFilm()
+      this.updateFilm()
     },
 
     // Funzione Home Page
@@ -65,9 +74,35 @@ var app = new Vue ({
       this.query = "marvel";
       this.page = 1;
       this.totalPages = 1;
-      this.searchFilm()
+      this.updateFilm()
       this.query = ""
-    }
+    },
 
+    // Dettagli Film API
+    reqDetails(idFilmSel, movieTv) {
+      // Genere
+      this.idFilmSel = idFilmSel
+      axios.get("https://api.themoviedb.org/3/" + movieTv + "/" + this.idFilmSel, {
+        params: {
+          api_key: "3c7831140b3840fb6c05d908251a82a8",
+          language: "it-IT"
+        }
+      })
+      .then(resp => Vue.set(this.filmSel, "det", resp.data))
+      // Cast
+      axios.get("https://api.themoviedb.org/3/" + movieTv + "/" + this.idFilmSel + "/credits", {
+        params: {
+          api_key: "3c7831140b3840fb6c05d908251a82a8",
+          language: "it-IT"
+        }
+      })
+      .then(resp => Vue.set(this.filmSel, "cast", resp.data.cast))
+      Vue.set(this.filmSel, "type", movieTv)
+      Vue.set(this.filmSel.det, "vote_average", Math.ceil(this.filmSel.det.vote_average / 2))
+    },
+
+    removeFilmSel() {
+      this.idFilmSel = '0'
+    }
   },
 })
