@@ -189,7 +189,7 @@ main .film {
   border: 1px solid grey;
   cursor: pointer;
   transform: scale(1.2);
-  z-index: 999;
+  z-index: 100;
 }
 
 .film:hover>img {
@@ -213,7 +213,7 @@ main .film {
   display: flex;
   align-items: center;
   justify-content: center;
-
+  z-index: 200;
 }
 
 #card {
