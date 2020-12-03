@@ -12,47 +12,83 @@
   <body>
     <div id="app">
 
+      <!-- Header -->
       <header>
-        <div id="logo">
+        <div id="logo" @click="homePage">
           BOOLFLIX
         </div>
-        <div id="searched" v-if="query != ''">
-          Risultati per: {{query}}
+        <nav>
+          <div @click="homePage">Home</div>
+          <div>Serie TV</div>
+          <div>Film</div>
+          <div>La mia Lista</div>
+          <div>Profilo</div>
+        </nav>
+        <div id="searchbar">
+          <i class="fas fa-search" @click="searchFilm"></i>
+          <input v-model="searchKey" type="text" @keypress.enter="searchFilm" placeholder="Cerca...">
         </div>
-        <div id="page-selector" v-if="totalPages > 1">
+      </header>
+
+      <!-- Results -->
+      <div id="results">
+        <div id="searched" v-if="query != ''">
+          Risultati per:
+          "<span>{{query.toUpperCase()}}</span>"
+        </div>
+        <div id="page-selector" v-if="totalPages > 1 && query != ''">
           <i class="fas fa-caret-left" @click="prevPage" v-if="page > 1"></i>
           pagina {{page}} di {{totalPages}}
           <i class="fas fa-caret-right" @click="nextPage" v-if="page < totalPages"></i>
         </div>
-        <div id="searchbar">
-          <input v-model="searchKey" type="text" @keypress.enter="searchFilm" placeholder="Search...">
-          <button type="button" @click="searchFilm">SEARCH</button>
+        <div id="home-page" v-if="query === ''">
+          Benvenuto nella tua Home Page. Non sai cosa guardare? Ecco qualche consiglio:
         </div>
-      </header>
+      </div>
 
+      <!-- Main -->
       <main>
         <div class="film" v-for="film in arrayFilm">
 
+          <!-- Film Poster-->
           <img :src='"https://image.tmdb.org/t/p/w342/" + film.poster_path' @error="replacePoster">
 
-          <div v-if="film.type === 'movie'">
-            <div>Titolo: {{film.title}}</div>
-            <div>Titolo Originale: {{film.original_title}}</div>
-          </div>
-          <div v-if="film.type === 'tv'">
-            <div>Titolo: {{film.name}}</div>
-            <div>Titolo Originale: {{film.name}}</div>
-          </div>
-
-          <div class="film-language">
-            Lingua: <img :src='"img/" + film.original_language + ".png"' :alt="film.original_language">
-          </div>
-
-          <div>
-            Voto:
-            <span v-for="(vote,i) in maxVote">
-              <i class="fa-star" :class="i <= film.vote_average ? 'fas' : 'far'"></i>
-            </span>
+          <!-- Film Details -->
+          <div class="film-details">
+            <div v-if="film.type === 'movie'">
+              <div>
+                <span class="det-title">TITOLO: </span>
+                {{film.title}}
+              </div>
+              <div class="movtv">
+                <span class="det-title">TITOLO ORIGINALE: </span>
+                {{film.original_title}}
+              </div>
+            </div>
+            <div v-if="film.type === 'tv'">
+              <div>
+                <span class="det-title">TITOLO: </span>
+                {{film.name}}
+              </div>
+              <div class="movtv">
+                <span class="det-title movtv">TITOLO ORIGINALE: </span>
+                {{film.name}}
+              </div>
+            </div>
+            <div class="film-language">
+              <span class="det-title">LINGUA:</span>
+              <img :src='"img/" + film.original_language + ".png"' :alt="film.original_language">
+            </div>
+            <div>
+              <span class="det-title">VOTO:</span>
+              <span v-for="(vote,i) in maxVote">
+                <i class="fa-star" :class="i <= film.vote_average ? 'fas' : 'far'"></i>
+              </span>
+            </div>
+            <div>
+              <span class="det-title">OVERVIEW:</span>
+              {{film.overview}}
+            </div>
           </div>
 
         </div>

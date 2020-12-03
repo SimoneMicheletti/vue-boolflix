@@ -1,3 +1,5 @@
+/* GENERALS */
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -6,13 +8,16 @@
 
 #app {
   height: 100vh;
-  background-color: grey;
   font-family: 'Lato', sans-serif;
 }
 
+
+
+/* HEADER */
+
 header {
-  height: 80px;
-  background-color: black;
+  height: 50px;
+  background-color: #101010;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -21,32 +26,157 @@ header {
 }
 
 #logo {
+  font-size: 20px;
   color: red;
+  font-weight: bold;
+  transition: 0.2s;
 }
 
+#logo:hover {
+  cursor: pointer;
+  transform: scale(1.2);
+}
+
+header nav {
+  font-weight: bold;
+  margin-left: 100px;
+  display: flex;
+  width: 400px;;
+  justify-content: space-between;
+}
+
+header nav div:hover{
+  color: white;
+  cursor: pointer;
+}
+
+#searchbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-grow: 1;
+}
+
+#searchbar i:hover {
+  color: white;
+  cursor: pointer;
+}
+
+#searchbar input {
+  margin-left: 20px;
+  background-color: #101010;
+  border: 1px solid grey;
+  border-radius: 20px;
+  padding: 5px 10px;
+  color: grey;
+}
+
+#searchbar input:focus {
+  border-color: white;
+}
+
+
+
+/* RESULTS */
+
+#results {
+  height: 70px;
+  background-color: #101010;
+  color: lightgrey;
+  padding-left: 100px;
+  display: flex;
+  align-items: center;
+}
+
+#searched span {
+  font-weight: bold;
+  color: white;
+}
+
+#page-selector {
+  margin-left: 50px;
+}
+
+#page-selector i{
+  margin: 0 10px;
+}
+
+#page-selector i:hover{
+  cursor: pointer;
+  color: white;
+}
+
+
+
+/* MAIN */
+
 main {
-  height: calc(100% - 80px);
-  padding: 50px 100px;
+  height: calc(100% - 120px);
+  padding: 30px 100px;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
   overflow-y: auto;
+  justify-content: center;
+  background-image: linear-gradient(#101010, #202020);
 }
 
 main .film {
-  width: calc((100% - 200px) / 5);
+  width: 200px;
+  height: 300px;
   background-color: black;
-  border: 1px solid red;
   color: white;
-  margin-bottom: 50px;
-  padding: 10px;
+  margin-bottom: 20px;
+  overflow-y: hidden;
+  transition: 0.2s;
 }
 
 .film>img {
   width: 100%;
 }
 
+.film-language {
+  display: flex;
+  align-items: center;
+}
+
 .film-language img {
-  width: 50px;
-  height: 30px;
+  width: 20px;
+  height: 11px;
+  margin-left: 5px;
+}
+
+.film-details {
+  display: none;
+  margin: 8px;
+  font-size: 10px;
+  color: lightgrey;
+}
+
+.film-details>div, .movtv{
+  margin-top: 5px;
+}
+
+.film-details .det-title {
+  font-weight: bold;
+  color: white;
+}
+
+.fas.fa-star {
+  color: gold;
+}
+
+/* HOVER */
+
+.film:hover {
+  border: 1px solid grey;
+  cursor: pointer;
+  transform: scale(1.2);
+}
+
+.film:hover>img {
+  display: none;
+}
+
+.film:hover>.film-details {
+  display: block;
 }

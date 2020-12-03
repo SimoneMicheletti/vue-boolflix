@@ -10,16 +10,27 @@ var app = new Vue ({
     searchKey: ""
   },
 
+  mounted: function() {
+    this.homePage()
+  },
+
   methods: {
 
+    // Funzione aggiornare array film mostrati
     searchFilm() {
       this.arrayFilm = [];
-      this.searchKey != "" ? this.query = this.searchKey : this.query
+      // Verifico se è una nuovo ricerca o solo un cambio pagina
+      if (this.searchKey != "") {
+        this.query = this.searchKey
+        this.page = 1;
+        this.totalPages = 1;
+      }
       this.searchKey = "";
       this.updateArray("movie")
       this.updateArray("tv")
     },
 
+    // Chiamate API
     updateArray(movieTv) {
       axios.get("https://api.themoviedb.org/3/search/" + movieTv + "?api_key=3c7831140b3840fb6c05d908251a82a8&query=" + this.query + "&page=" + this.page)
       .then(resp => {
@@ -32,20 +43,31 @@ var app = new Vue ({
       })
     },
 
+    // Funzione per sostituire poster mancante
     replacePoster(event) {
       event.target.src = "img/randomPoster.jpg"
     },
 
+    // Funzione Next page
     nextPage() {
       this.page++
       this.searchFilm()
     },
 
+    // Funzione Prev page
     prevPage() {
       this.page--
       this.searchFilm()
+    },
+
+    // Funzione Home Page
+    homePage() {
+      this.query = "marvel";
+      this.page = 1;
+      this.totalPages = 1;
+      this.searchFilm()
+      this.query = ""
     }
 
   },
-
 })
