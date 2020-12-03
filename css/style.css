@@ -42,7 +42,7 @@ header nav {
   font-weight: bold;
   margin-left: 100px;
   display: flex;
-  width: 400px;;
+  width: 150px;;
   justify-content: space-between;
 }
 
@@ -63,7 +63,8 @@ header nav div:hover{
   cursor: pointer;
 }
 
-#searchbar input {
+#searchbar input , #results select{
+  width: 200px;
   margin-left: 20px;
   background-color: #101010;
   border: 1px solid grey;
@@ -84,9 +85,14 @@ header nav div:hover{
   height: 70px;
   background-color: #101010;
   color: lightgrey;
-  padding-left: 100px;
+  padding: 0 100px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+}
+
+#results>div:first-child {
+  display: flex;
 }
 
 #searched span {
@@ -181,6 +187,9 @@ main .film {
   color: gold;
 }
 
+.gold {
+  color: gold;
+}
 
 
 /* HOVER */
@@ -254,21 +263,30 @@ main .film {
   content: ",";
 }
 
-#card-close {
+#card-close, .toggle-mylist{
   display: flex;
   justify-content: space-around;
   align-items: center;
   border: 1px solid white;
-  width: 120px;
   height: 30px;
   position: absolute;
   background-color: black;
   top: -30px;
   right: -0.5px;
-  transition: 0.2s;
+  transition: 00s;
 }
 
-#card-close:hover {
+#card-close {
+  width: 120px;
+  right: -0.5px;
+}
+
+.toggle-mylist{
+  width: 50px;
+  right: 119px;
+}
+
+#card-close:hover , .toggle-mylist:hover {
   cursor: pointer;
   background-color: #202020;
   color: white;

@@ -18,11 +18,8 @@
           BOOLFLIX
         </div>
         <nav>
-          <div @click="homePage">Home</div>
-          <div>Serie TV</div>
-          <div>Film</div>
-          <div>La mia Lista</div>
-          <div>Profilo</div>
+          <div @click="homePage()">Home</div>
+          <div @click="showMyList()">La mia Lista</div>
         </nav>
         <div id="searchbar">
           <i class="fas fa-search" @click="updateFilm"></i>
@@ -32,23 +29,35 @@
 
       <!-- Results -->
       <div id="results">
-        <div id="searched" v-if="query != ''">
-          Risultati per:
-          "<span>{{query.toUpperCase()}}</span>"
+        <div>
+          <div id="searched" v-if="query != '' && query != '^^'">
+            Risultati per:
+            "<span>{{query.toUpperCase()}}</span>"
+          </div>
+          <div id="page-selector" v-if="totalPages > 1 && query != '' && query != '^^'">
+            <i class="fas fa-chevron-left" @click="prevPage" v-if="page > 1"></i>
+            Pagina {{page}} di {{totalPages}}
+            <i class="fas fa-chevron-right" @click="nextPage" v-if="page < totalPages"></i>
+          </div>
+          <div id="home-page" v-if="query === '^^'">
+            Ecco la tua lista dei preferiti
+          </div>
+          <div id="home-page" v-if="query === ''">
+            Benvenuto nella tua Home Page. Non sai cosa guardare? Ecco qualche consiglio:
+          </div>
         </div>
-        <div id="page-selector" v-if="totalPages > 1 && query != ''">
-          <i class="fas fa-chevron-left" @click="prevPage" v-if="page > 1"></i>
-          Pagina {{page}} di {{totalPages}}
-          <i class="fas fa-chevron-right" @click="nextPage" v-if="page < totalPages"></i>
-        </div>
-        <div id="home-page" v-if="query === ''">
-          Benvenuto nella tua Home Page. Non sai cosa guardare? Ecco qualche consiglio:
+        <div>
+          <select v-model="filterMovTv">
+            <option value="movietv" selected>Film e SerieTV</option>
+            <option value="movie">Film</option>
+            <option value="tv">SerieTV</option>
+          </select>
         </div>
       </div>
 
       <!-- Main -->
       <main>
-        <div class="film" v-for="(film,index) in arrayFilm" @click="reqDetails(index)">
+        <div class="film" v-for="(film,index) in arrayFilm" v-if="filterMovTv.includes(film.type)" @click="reqDetails(index)">
 
           <!-- Film Poster-->
           <img :src='"https://image.tmdb.org/t/p/w342/" + film.poster_path' @error="replacePoster">
@@ -91,16 +100,28 @@
               <div class="sfoc"></div>
             </div>
           </div>
-
         </div>
+
+        <!-- Messaggio no results -->
+        <div v-if="arrayFilm.length < 1">
+          <img src="https://www.cloudconsult.ca/public/no-search-found.png">
+        </div>
+
       </main>
+
 
       <!-- Focus sul film selezionato -->
       <div id="film-sel" v-if="filmSel.id != ''">
         <div id="card">
 
+          <!-- Chiudi focus -->
           <div id="card-close" @click="removeFilmSel()">
             <div>CHIUDI</div> <i class="fas fa-times"></i>
+          </div>
+
+          <!-- Toggle alla Mia Lista -->
+          <div class="toggle-mylist" @click="toggleMyList(filmSel.type)">
+            <i class="fas fa-crown" :class="{'gold': myList.includes(filmSel.id)}"></i>
           </div>
 
           <div id="card-top">

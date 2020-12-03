@@ -8,7 +8,10 @@ var app = new Vue ({
     maxVote: 5,
     query: "",
     searchKey: "",
-    filmSel: {id:""}
+    filmSel: {id:""},
+    filmSelType: [],
+    filterMovTv: "movietv",
+    myList: []
   },
 
   mounted: function() {
@@ -101,6 +104,36 @@ var app = new Vue ({
     // Funzione rimuovore focus film
     removeFilmSel() {
       this.filmSel = {id:""}
+    },
+
+    // Funzione toggle my list
+    toggleMyList(type) {
+      if (this.myList.includes(this.filmSel.id)) {
+        this.myList.forEach((item,i) => {
+          if (item === this.filmSel.id) {
+            this.myList.splice(i,1)
+            this.filmSelType.splice(i,1)
+          }
+        });
+      } else {
+        this.myList.push(this.filmSel.id)
+        this.filmSelType.push(type)
+      }
+    },
+
+    // Funzione show my List
+    showMyList(){
+      this.query = "^^"
+      this.arrayFilm = [];
+      this.myList.forEach((item,i) => {
+        axios.get("https://api.themoviedb.org/3/" + this.filmSelType[i] + "/" + item + "?api_key=3c7831140b3840fb6c05d908251a82a8&language=it-IT")
+        .then(resp => {
+          Vue.set(resp.data, "type", this.filmSelType[i])
+          Vue.set(resp.data, "vote_average", Math.ceil(resp.data.vote_average / 2))
+          this.arrayFilm.push(resp.data)
+        })
+      });
+
     }
   },
 })
