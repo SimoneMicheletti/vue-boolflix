@@ -151,6 +151,8 @@ main .film {
   margin: 8px;
   font-size: 10px;
   color: lightgrey;
+  padding-bottom: 5px;
+  overflow-y: hidden;
 }
 
 .film-details>div, .movtv{

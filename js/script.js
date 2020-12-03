@@ -8,8 +8,7 @@ var app = new Vue ({
     maxVote: 5,
     query: "",
     searchKey: "",
-    idFilmSel: "0",
-    filmSel: {}
+    filmSel: {id:""}
   },
 
   mounted: function() {
@@ -79,30 +78,29 @@ var app = new Vue ({
     },
 
     // Dettagli Film API
-    reqDetails(idFilmSel, movieTv) {
+    reqDetails(index) {
+      this.filmSel = this.arrayFilm[index]
       // Genere
-      this.idFilmSel = idFilmSel
-      axios.get("https://api.themoviedb.org/3/" + movieTv + "/" + this.idFilmSel, {
+      axios.get("https://api.themoviedb.org/3/" + this.filmSel.type + "/" + this.filmSel.id, {
         params: {
           api_key: "3c7831140b3840fb6c05d908251a82a8",
           language: "it-IT"
         }
       })
-      .then(resp => Vue.set(this.filmSel, "det", resp.data))
+      .then(resp => Vue.set(this.filmSel, "genres", resp.data.genres))
       // Cast
-      axios.get("https://api.themoviedb.org/3/" + movieTv + "/" + this.idFilmSel + "/credits", {
+      axios.get("https://api.themoviedb.org/3/" + this.filmSel.type + "/" + this.filmSel.id + "/credits", {
         params: {
           api_key: "3c7831140b3840fb6c05d908251a82a8",
           language: "it-IT"
         }
       })
       .then(resp => Vue.set(this.filmSel, "cast", resp.data.cast))
-      Vue.set(this.filmSel, "type", movieTv)
-      Vue.set(this.filmSel.det, "vote_average", Math.ceil(this.filmSel.det.vote_average / 2))
     },
 
+    // Funzione rimuovore focus film
     removeFilmSel() {
-      this.idFilmSel = '0'
+      this.filmSel = {id:""}
     }
   },
 })

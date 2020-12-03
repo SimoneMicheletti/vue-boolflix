@@ -48,7 +48,7 @@
 
       <!-- Main -->
       <main>
-        <div class="film" v-for="film in arrayFilm" @click="reqDetails(film.id, film.type)">
+        <div class="film" v-for="(film,index) in arrayFilm" @click="reqDetails(index)">
 
           <!-- Film Poster-->
           <img :src='"https://image.tmdb.org/t/p/w342/" + film.poster_path' @error="replacePoster">
@@ -95,7 +95,7 @@
       </main>
 
       <!-- Focus sul film selezionato -->
-      <div id="film-sel" v-if="idFilmSel != '0'">
+      <div id="film-sel" v-if="filmSel.id != ''">
         <div id="card">
 
           <div id="card-close" @click="removeFilmSel()">
@@ -103,42 +103,41 @@
           </div>
 
           <div id="card-top">
-            <img :src='"https://image.tmdb.org/t/p/w342/" + filmSel.det.poster_path' @error="replacePoster">
-
+            <img :src='"https://image.tmdb.org/t/p/w342/" + filmSel.poster_path' @error="replacePoster">
             <div>
               <div v-if="filmSel.type === 'movie'">
                 <div>
                   <span class="det-title">TITOLO: </span>
-                  {{filmSel.det.title}}
+                  {{filmSel.title}}
                 </div>
                 <div class="movtv">
                   <span class="det-title">TITOLO ORIGINALE: </span>
-                  {{filmSel.det.original_title}}
+                  {{filmSel.original_title}}
                 </div>
               </div>
               <div v-if="filmSel.type === 'tv'">
                 <div>
                   <span class="det-title">TITOLO: </span>
-                  {{filmSel.det.name}}
+                  {{filmSel.name}}
                 </div>
                 <div class="movtv">
                   <span class="det-title movtv">TITOLO ORIGINALE: </span>
-                  {{filmSel.det.name}}
+                  {{filmSel.name}}
                 </div>
               </div>
               <div class="film-language">
                 <span class="det-title">LINGUA:</span>
-                <img :src='"img/" + filmSel.det.original_language + ".png"' :alt="filmSel.det.original_language">
+                <img :src='"img/" + filmSel.original_language + ".png"' :alt="filmSel.original_language">
               </div>
               <div>
                 <span class="det-title">VOTO:</span>
                 <span v-for="(vote,i) in maxVote">
-                  <i class="fa-star" :class="i <= filmSel.det.vote_average ? 'fas' : 'far'"></i>
+                  <i class="fa-star" :class="i <= filmSel.vote_average ? 'fas' : 'far'"></i>
                 </span>
               </div>
-              <div v-if="filmSel.det.genres != ''">
+              <div v-if="filmSel.genres != ''">
                 <span class="det-title">GENERE: </span>
-                <span class="card-list" v-for="gener in filmSel.det.genres">{{gener.name}}</span>
+                <span class="card-list" v-for="gener in filmSel.genres">{{gener.name}}</span>
               </div>
               <div v-if="filmSel.cast != ''">
                 <span class="det-title">ATTORI: </span>
@@ -147,9 +146,9 @@
             </div>
           </div>
 
-          <div v-if="filmSel.det.overview != '' ">
+          <div v-if="filmSel.overview != '' ">
             <span class="det-title">TRAMA:</span>
-            {{filmSel.det.overview}}
+            {{filmSel.overview}}
           </div>
 
         </div>
