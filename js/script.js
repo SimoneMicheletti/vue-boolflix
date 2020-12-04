@@ -5,13 +5,12 @@ var app = new Vue ({
     arrayFilm: [],
     page: 1,
     totalPages: 1,
-    maxVote: 5,
     query: "",
     searchKey: "",
     filmSel: {id:""},
-    filmSelType: [],
     filterMovTv: "movietv",
-    myList: []
+    myListId: [],
+    myListType: []
   },
 
   mounted: function() {
@@ -36,20 +35,11 @@ var app = new Vue ({
 
     // search API
     searchAPI(movieTv) {
-      axios.get("https://api.themoviedb.org/3/search/" + movieTv, {
-        params: {
-          api_key: "3c7831140b3840fb6c05d908251a82a8",
-          language: "it-IT",
-          query: this.query,
-          page: this.page
-        }
-      })
+      axios.get("https://api.themoviedb.org/3/search/" + movieTv + "?api_key=3c7831140b3840fb6c05d908251a82a8&language=it-IT", {
+        params: { query: this.query, page: this.page }})
       .then(resp => {
         this.totalPages < resp.data.total_pages ? this.totalPages = resp.data.total_pages : this.total_pages
-        resp.data.results.forEach(item => {
-          Vue.set(item, "type", movieTv)
-          Vue.set(item, "vote_average", Math.ceil(item.vote_average / 2))
-        })
+        resp.data.results.forEach(item => Vue.set(item, "type", movieTv))
         this.arrayFilm = [...this.arrayFilm, ...resp.data.results]
       })
     },
@@ -80,24 +70,12 @@ var app = new Vue ({
       this.query = ""
     },
 
-    // Dettagli Film API
+    // Dettagli Film API Genere e Cast
     reqDetails(index) {
       this.filmSel = this.arrayFilm[index]
-      // Genere
-      axios.get("https://api.themoviedb.org/3/" + this.filmSel.type + "/" + this.filmSel.id, {
-        params: {
-          api_key: "3c7831140b3840fb6c05d908251a82a8",
-          language: "it-IT"
-        }
-      })
+      axios.get("https://api.themoviedb.org/3/" + this.filmSel.type + "/" + this.filmSel.id + "?api_key=3c7831140b3840fb6c05d908251a82a8&language=it-IT")
       .then(resp => Vue.set(this.filmSel, "genres", resp.data.genres))
-      // Cast
-      axios.get("https://api.themoviedb.org/3/" + this.filmSel.type + "/" + this.filmSel.id + "/credits", {
-        params: {
-          api_key: "3c7831140b3840fb6c05d908251a82a8",
-          language: "it-IT"
-        }
-      })
+      axios.get("https://api.themoviedb.org/3/" + this.filmSel.type + "/" + this.filmSel.id + "/credits?api_key=3c7831140b3840fb6c05d908251a82a8&language=it-IT")
       .then(resp => Vue.set(this.filmSel, "cast", resp.data.cast))
     },
 
@@ -108,16 +86,16 @@ var app = new Vue ({
 
     // Funzione toggle my list
     toggleMyList(type) {
-      if (this.myList.includes(this.filmSel.id)) {
-        this.myList.forEach((item,i) => {
+      if (this.myListId.includes(this.filmSel.id)) {
+        this.myListId.forEach((item,i) => {
           if (item === this.filmSel.id) {
-            this.myList.splice(i,1)
-            this.filmSelType.splice(i,1)
+            Vue.delete(this.myListId, i)
+            Vue.delete(this.myListType, i)
           }
         });
       } else {
-        this.myList.push(this.filmSel.id)
-        this.filmSelType.push(type)
+        this.myListId.push(this.filmSel.id)
+        this.myListType.push(type)
       }
     },
 
@@ -125,15 +103,14 @@ var app = new Vue ({
     showMyList(){
       this.query = "^^"
       this.arrayFilm = [];
-      this.myList.forEach((item,i) => {
-        axios.get("https://api.themoviedb.org/3/" + this.filmSelType[i] + "/" + item + "?api_key=3c7831140b3840fb6c05d908251a82a8&language=it-IT")
+      this.myListId.forEach((item,i) => {
+        axios.get("https://api.themoviedb.org/3/" + this.myListType[i] + "/" + item + "?api_key=3c7831140b3840fb6c05d908251a82a8&language=it-IT")
         .then(resp => {
-          Vue.set(resp.data, "type", this.filmSelType[i])
-          Vue.set(resp.data, "vote_average", Math.ceil(resp.data.vote_average / 2))
+          Vue.set(resp.data, "type", this.myListType[i])
           this.arrayFilm.push(resp.data)
         })
       });
-
     }
+
   },
 })

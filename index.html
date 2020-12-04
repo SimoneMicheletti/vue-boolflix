@@ -90,8 +90,8 @@
             </div>
             <div>
               <span class="det-title">VOTO:</span>
-              <span v-for="(vote,i) in maxVote">
-                <i class="fa-star" :class="i <= film.vote_average ? 'fas' : 'far'"></i>
+              <span v-for="(vote,i) in 5">
+                <i class="fa-star" :class="i <= Math.ceil(film.vote_average / 2) ? 'fas' : 'far'"></i>
               </span>
             </div>
             <div v-if="film.overview != '' ">
@@ -109,19 +109,20 @@
 
       </main>
 
-
       <!-- Focus sul film selezionato -->
       <div id="film-sel" v-if="filmSel.id != ''">
         <div id="card">
 
           <!-- Chiudi focus -->
           <div id="card-close" @click="removeFilmSel()">
-            <div>CHIUDI</div> <i class="fas fa-times"></i>
+            <div>Chiudi</div> <i class="fas fa-times"></i>
           </div>
 
           <!-- Toggle alla Mia Lista -->
           <div class="toggle-mylist" @click="toggleMyList(filmSel.type)">
-            <i class="fas fa-crown" :class="{'gold': myList.includes(filmSel.id)}"></i>
+            <span v-if="!myListId.includes(filmSel.id)">Aggiungi alla lista</span>
+            <span v-if="myListId.includes(filmSel.id)">Rimuovi dalla lista</span>
+            <i class="fas fa-crown" :class="{'gold': myListId.includes(filmSel.id)}"></i>
           </div>
 
           <div id="card-top">
@@ -153,8 +154,8 @@
               </div>
               <div>
                 <span class="det-title">VOTO:</span>
-                <span v-for="(vote,i) in maxVote">
-                  <i class="fa-star" :class="i <= filmSel.vote_average ? 'fas' : 'far'"></i>
+                <span v-for="(vote,i) in 5">
+                  <i class="fa-star" :class="i <= Math.ceil(filmSel.vote_average / 2) ? 'fas' : 'far'"></i>
                 </span>
               </div>
               <div v-if="filmSel.genres != ''">
