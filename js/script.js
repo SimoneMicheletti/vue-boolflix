@@ -117,7 +117,9 @@ var app = new Vue ({
 
     // Funzione show my List
     showMyList(){
-      this.query = "^^"
+      this.query = "^^";
+      this.filterMovTv = "movietv";
+      this.filterGenres = "";
       this.arrayFilm = [];
       // ciclo tutti gli id presenti nel all'array dei film salvati passandogli ad ogni chiamata l'id specifico e la relativa tipologia
       this.myListId.forEach((item,i) => {
