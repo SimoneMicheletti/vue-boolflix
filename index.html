@@ -47,6 +47,10 @@
           </div>
         </div>
         <div>
+          <select v-model="filterGenres">
+            <option value="">Tutti i Generi</option>
+            <option v-for="genre in genres" :value="genre.id">{{genre.name}}</option>
+          </select>
           <select v-model="filterMovTv">
             <option value="movietv" selected>Film e SerieTV</option>
             <option value="movie">Film</option>
@@ -57,7 +61,7 @@
 
       <!-- Main -->
       <main>
-        <div class="film" v-for="(film,index) in arrayFilm" v-if="filterMovTv.includes(film.type)" @click="reqDetails(index)">
+        <div class="film" v-for="(film,index) in arrayFilm" v-if="filterMovTv.includes(film.type) && (film.genre_ids.includes(filterGenres) || filterGenres==='')" @click="reqDetails(index)">
 
           <!-- Film Poster-->
           <img :src='"https://image.tmdb.org/t/p/w342/" + film.poster_path' @error="replacePoster">

@@ -9,25 +9,29 @@ var app = new Vue ({
     searchKey: "",
     filmSel: {id:""},
     filterMovTv: "movietv",
+    genres: [],
+    filterGenres: "",
     myListId: [],
     myListType: []
   },
 
   mounted: function() {
-    this.homePage()
+    this.homePage();
+    this.reqGenres();
   },
 
   methods: {
 
-    // Funzione aggiornare array film mostrati
+    // Funzione aggiornare film mostrati
     updateFilm() {
       this.arrayFilm = [];
-      // Verifico se è una nuovo ricerca o solo un cambio pagina
+      // se è una nuova ricerca azzero pagine e aggiorno query
       if (this.searchKey != "") {
         this.query = this.searchKey
         this.page = 1;
         this.totalPages = 1;
       }
+      // altrimenti è un cambio pagina
       this.searchKey = "";
       this.searchAPI("movie")
       this.searchAPI("tv")
@@ -66,8 +70,10 @@ var app = new Vue ({
       this.query = "marvel";
       this.page = 1;
       this.totalPages = 1;
-      this.updateFilm()
-      this.query = ""
+      this.filterMovTv = "movietv";
+      this.filterGenres = "";
+      this.updateFilm();
+      this.query = "";
     },
 
     // Dettagli Film API Genere e Cast
@@ -86,6 +92,8 @@ var app = new Vue ({
 
     // Funzione toggle my list
     toggleMyList(type) {
+
+      // rimuovi dalla lista in pagina normale
       if (this.myListId.includes(this.filmSel.id)) {
         this.myListId.forEach((item,i) => {
           if (item === this.filmSel.id) {
@@ -93,24 +101,47 @@ var app = new Vue ({
             Vue.delete(this.myListType, i)
           }
         });
+        // se sono nella pagina "mia lista" refresh pagina
+        if (this.query === "^^") {
+          this.showMyList();
+          this.removeFilmSel();
+        }
+      // aggiungi alla mia lista
       } else {
+        // mi salvo id e tipologia film selezionato
         this.myListId.push(this.filmSel.id)
         this.myListType.push(type)
       }
+
     },
 
     // Funzione show my List
     showMyList(){
       this.query = "^^"
       this.arrayFilm = [];
+      // ciclo tutti gli id presenti nel all'array dei film salvati passandogli ad ogni chiamata l'id specifico e la relativa tipologia
       this.myListId.forEach((item,i) => {
         axios.get("https://api.themoviedb.org/3/" + this.myListType[i] + "/" + item + "?api_key=3c7831140b3840fb6c05d908251a82a8&language=it-IT")
         .then(resp => {
+          // aggiungo al risultato la tipologia
           Vue.set(resp.data, "type", this.myListType[i])
+          // trasformo il risoltato genre.id in genre_ids per permettermi il filtraggio
+          Vue.set(resp.data, "genre_ids", [])
+          resp.data.genres.forEach(item => resp.data.genre_ids.push(item.id));
+          //push in arrayFilm e visualizzo a schermo
           this.arrayFilm.push(resp.data)
         })
       });
-    }
+    },
+
+    // API Genere
+    // richiedo tutti igeneri possibili per movie e tv
+    reqGenres() {
+      axios.get("https://api.themoviedb.org/3/genre/movie/list?api_key=3c7831140b3840fb6c05d908251a82a8&language=it-IT")
+      .then(resp => this.genres = resp.data.genres)
+      axios.get("https://api.themoviedb.org/3/genre/tv/list?api_key=3c7831140b3840fb6c05d908251a82a8&language=it-IT")
+      .then(resp => this.genres = [...this.genres, ...resp.data.genres])
+    },
 
   },
 })
